@@ -27,7 +27,7 @@ log_handler = RotatingFileHandler(LOG_FILE, maxBytes=10*1024*1024, backupCount=5
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
                     handlers=[log_handler],
                     level=logging.INFO)
-logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger('httpx').setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 # Load environment variables from the .env file
@@ -69,32 +69,32 @@ if not os.path.isfile(BADGE_CSV):
 # Badge IDs and symbols from environment variables
 BADGES = {
     'CBBH': {
-        'symbol': "🕸️",
+        'symbol': '🕸️',
         'path_id': os.getenv('CBBH_PATH'),
         'exam_id': os.getenv('CBBH_EXAM')
     },
     'CPTS': {
-        'symbol': "⚔️",
+        'symbol': '⚔️',
         'path_id': os.getenv('CPTS_PATH'),
         'exam_id': os.getenv('CPTS_EXAM')
     },
     'CDSA': {
-        'symbol': "🛡️",
+        'symbol': '🛡️',
         'path_id': os.getenv('CDSA_PATH'),
         'exam_id': os.getenv('CDSA_EXAM')
     },
     'CWEE': {
-        'symbol': "🕷️",
+        'symbol': '🕷️',
         'path_id': os.getenv('CWEE_PATH'),
         'exam_id': os.getenv('CWEE_EXAM')
     },
     'CAPE': {
-        'symbol': "🫅",
+        'symbol': '🫅',
         'path_id': os.getenv('CAPE_PATH'),
         'exam_id': os.getenv('CAPE_EXAM')
     },
     'CJCA': {
-        'symbol': "🥷",
+        'symbol': '🥷',
         'path_id': os.getenv('CJCA_PATH'),
         'exam_id': os.getenv('CJCA_EXAM')
     }
@@ -103,11 +103,11 @@ BADGES = {
 # Function to fetch the last recorded badge numbers from the CSV file
 def get_last_badge_numbers():
     try:
-        with open(BADGE_CSV, "r") as csvfile:
+        with open(BADGE_CSV, 'r') as csvfile:
             last_line = csvfile.readlines()[-1].strip()
         return last_line.split(',')
     except FileNotFoundError:
-        logger.error("CSV file not found.")
+        logger.error("CSV file not found")
         return [0] * (len(BADGES) * 2 + 1)
     except Exception as e:
         logger.error(f"Error reading CSV file: {e}")
@@ -157,7 +157,7 @@ def generate_update_message(differences, current_badges):
         path_num, exam_num = current_badges[2 * i + 1], current_badges[2 * i + 2]
 
         if badge['path_id'] or badge['exam_id']:
-            message += f"{badge['symbol']} **{name}** \n"
+            message += f"{badge['symbol']} *{name}*\n"
             if badge['exam_id']:
                 message += f"EXAM: {exam_num} {'*(+' + str(exam_diff) + ')*' if exam_diff != 0 else ''}\n"
             if badge['path_id']:
@@ -220,11 +220,14 @@ async def last_batch(update, context: ContextTypes.DEFAULT_TYPE):
                 message += f"{symbol} {name}: No data\n"
         else:
             message += f"{symbol} {name}: No data\n"
-    await context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text=message,
-        parse_mode='Markdown'
-    )
+    try:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=message,
+            parse_mode='Markdown'
+        )
+    except Exception as e:
+        logger.error(f"Failed to send Telegram message: {e}")
 
 # Function to send status message every hour
 async def status_message(context: CallbackContext):
@@ -319,11 +322,11 @@ async def send_log(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await context.bot.send_document(
                     chat_id=chat_id,
                     document=log_file,
-                    filename="bot.log",
-                    caption="📄 Latest log file"
+                    filename="bot.log"
                 )
             else:
                 pass
+
     except Exception as e:
         logger.error(f"Failed to send the log file: {e}")
         if update.message:
