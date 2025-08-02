@@ -1,0 +1,4 @@
+python-telegram-bot[job-queue]
+beautifulsoup4
+requests
+python-dotenv

@@ -1,0 +1,28 @@
+services:
+  certbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: badge-tracker-bot
+        PYTHON_VERSION: 3.12.8
+    container_name: badge-tracker-bot
+    volumes:
+      - ./data:/opt/badge-tracker-bot/data
+      - ./logs:/opt/badge-tracker-bot/logs
+    environment:
+      # Environment variables passed to the container
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_USER_ID: ${TELEGRAM_USER_ID}
+      TELEGRAM_CHANNEL_ID: ${TELEGRAM_CHANNEL_ID}
+      CBBH_PATH: ${CBBH_PATH}
+      CBBH_EXAM: ${CBBH_EXAM}
+      CPTS_PATH: ${CPTS_PATH}
+      CPTS_EXAM: ${CPTS_EXAM}
+      CDSA_PATH: ${CDSA_PATH}
+      CDSA_EXAM: ${CDSA_EXAM}
+      CWEE_PATH: ${CWEE_PATH}
+      CWEE_EXAM: ${CWEE_EXAM}
+      CAPE_PATH: ${CAPE_PATH}
+      CAPE_EXAM: ${CAPE_EXAM}
+    restart: unless-stopped
