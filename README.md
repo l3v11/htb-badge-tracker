@@ -36,18 +36,18 @@ HTB Badge Tracker is a Telegram bot that periodically checks the number of badge
    TELEGRAM_BOT_TOKEN=your_telegram_bot_token
    TELEGRAM_USER_ID=your_telegram_user_id
    TELEGRAM_CHANNEL_ID=your_telegram_channel_id
-   CBBH_PATH=cbbh_path_id
    CBBH_EXAM=cbbh_exam_id
-   CPTS_PATH=cpts_path_id
+   CBBH_PATH=cbbh_path_id
    CPTS_EXAM=cpts_exam_id
-   CDSA_PATH=cdsa_path_id
+   CPTS_PATH=cpts_path_id
    CDSA_EXAM=cdsa_exam_id
-   CWEE_PATH=cwee_path_id
+   CDSA_PATH=cdsa_path_id
    CWEE_EXAM=cwee_exam_id
-   CAPE_PATH=cape_path_id
+   CWEE_PATH=cwee_path_id
    CAPE_EXAM=cape_exam_id
-   CJCA_PATH=cjca_path_id
+   CAPE_PATH=cape_path_id
    CJCA_EXAM=cjca_exam_id
+   CJCA_PATH=cjca_path_id
    ```
 
 5. **Run the bot:**

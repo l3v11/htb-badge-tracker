@@ -17,6 +17,14 @@ LOG_FILE = os.path.join(LOG_DIR, 'bot.log')
 DATA_DIR = os.path.join(INSTALL_DIR, 'data')
 BADGE_CSV = os.path.join(DATA_DIR, 'badges.csv')
 
+# Create the log directory if it does not exist
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+# Create the data directory if it does not exist
+if not os.path.exists(DATA_DIR):
+    os.makedirs(DATA_DIR)
+
 # URL for fetching badge information
 BADGE_URL = "https://academy.hackthebox.com/achievement/badge/"
 
@@ -47,14 +55,6 @@ CHAT_ID = os.getenv('TELEGRAM_CHANNEL_ID', '')
 if not CHAT_ID:
     logger.error("TELEGRAM_CHANNEL_ID environment variable is missing")
     exit(1)
-
-# Create the log directory if it does not exist
-if not os.path.exists(LOG_DIR):
-    os.makedirs(LOG_DIR)
-
-# Create the data directory if it does not exist
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
 
 # Create badges.csv file and write the header line
 if not os.path.isfile(BADGE_CSV):
@@ -167,7 +167,6 @@ def generate_update_message(differences, current_badges):
     message += f"_Last updated: {current_badges[0]} UTC_"
     return message
 
-
 # Function to get the last update times for each exam from the CSV file
 def get_last_update_times():
     last_update_times = {}
@@ -209,7 +208,7 @@ async def last_batch(update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     last_update_times = get_last_update_times()
-    message = "*Last Batch Update Times:*\n\n"
+    message = "_Last Batch Update Times:_\n\n"
     for name, badge in BADGES.items():
         symbol = badge['symbol']
         if badge['exam_id']:
