@@ -59,8 +59,8 @@ if not CHAT_ID:
 # Create badges.csv file and write the header line
 if not os.path.isfile(BADGE_CSV):
     fields = [
-        'timestamp', 'CBBH-Path', 'CBBH-Exam', 'CPTS-Path', 'CPTS-Exam', 'CDSA-Path', 'CDSA-Exam',
-        'CWEE-Path', 'CWEE-Exam', 'CAPE-Path', 'CAPE-Exam', 'CJCA-Path', 'CJCA-Exam'
+        'timestamp', 'CBBH-Exam', 'CBBH-Path', 'CPTS-Exam', 'CPTS-Path', 'CDSA-Exam', 'CDSA-Path',
+        'CWEE-Exam', 'CWEE-Path', 'CAPE-Exam', 'CAPE-Path', 'CJCA-Exam', 'CJCA-Path'
     ]
     with open(BADGE_CSV, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
@@ -70,33 +70,33 @@ if not os.path.isfile(BADGE_CSV):
 BADGES = {
     'CBBH': {
         'symbol': '🕸️',
-        'path_id': os.getenv('CBBH_PATH'),
-        'exam_id': os.getenv('CBBH_EXAM')
+        'exam_id': os.getenv('CBBH_EXAM'),
+        'path_id': os.getenv('CBBH_PATH')
     },
     'CPTS': {
         'symbol': '⚔️',
-        'path_id': os.getenv('CPTS_PATH'),
-        'exam_id': os.getenv('CPTS_EXAM')
+        'exam_id': os.getenv('CPTS_EXAM'),
+        'path_id': os.getenv('CPTS_PATH')
     },
     'CDSA': {
         'symbol': '🛡️',
-        'path_id': os.getenv('CDSA_PATH'),
-        'exam_id': os.getenv('CDSA_EXAM')
+        'exam_id': os.getenv('CDSA_EXAM'),
+        'path_id': os.getenv('CDSA_PATH')
     },
     'CWEE': {
         'symbol': '🕷️',
-        'path_id': os.getenv('CWEE_PATH'),
-        'exam_id': os.getenv('CWEE_EXAM')
+        'exam_id': os.getenv('CWEE_EXAM'),
+        'path_id': os.getenv('CWEE_PATH')
     },
     'CAPE': {
         'symbol': '🫅',
-        'path_id': os.getenv('CAPE_PATH'),
-        'exam_id': os.getenv('CAPE_EXAM')
+        'exam_id': os.getenv('CAPE_EXAM'),
+        'path_id': os.getenv('CAPE_PATH')
     },
     'CJCA': {
         'symbol': '🥷',
-        'path_id': os.getenv('CJCA_PATH'),
-        'exam_id': os.getenv('CJCA_EXAM')
+        'exam_id': os.getenv('CJCA_EXAM'),
+        'path_id': os.getenv('CJCA_PATH')
     }
 }
 
@@ -132,8 +132,8 @@ def fetch_current_badge_numbers():
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     badge_numbers = [timestamp]
     for badge in BADGES.values():
-        badge_numbers.append(fetch_badge_number(badge['path_id']))
         badge_numbers.append(fetch_badge_number(badge['exam_id']))
+        badge_numbers.append(fetch_badge_number(badge['path_id']))
     return badge_numbers
 
 # Function to compare the last and current badge numbers
@@ -156,7 +156,7 @@ def generate_update_message(differences, current_badges):
         path_diff, exam_diff = differences[2 * i], differences[2 * i + 1]
         path_num, exam_num = current_badges[2 * i + 1], current_badges[2 * i + 2]
 
-        if badge['path_id'] or badge['exam_id']:
+        if badge['exam_id'] or badge['path_id']:
             message += f"{badge['symbol']} *{name}*\n"
             if badge['exam_id']:
                 message += f"EXAM: {exam_num} {'*(+' + str(exam_diff) + ')*' if exam_diff != 0 else ''}\n"
@@ -184,7 +184,7 @@ def get_last_update_times():
             for row in data_rows:
                 timestamp = row[0]
                 for i, (name, badge) in enumerate(BADGES.items()):
-                    if not badge['exam_id']:
+                    if not badge['exam_id'] or not badge['path_id']:
                         continue
                     exam_index = 2 * i + 2
                     if exam_index >= len(row):
@@ -211,7 +211,7 @@ async def last_batch(update, context: ContextTypes.DEFAULT_TYPE):
     message = "_Last Batch Update Times:_\n\n"
     for name, badge in BADGES.items():
         symbol = badge['symbol']
-        if badge['exam_id']:
+        if badge['exam_id'] or badge['path_id']:
             if name in last_update_times:
                 timestamp = last_update_times[name][0]
                 message += f"{symbol} {name}: {timestamp} UTC\n"
@@ -235,13 +235,13 @@ async def status_message(context: CallbackContext):
 
     if last_badge_numbers[0] == "timestamp":
         add_badge_numbers_to_csv(current_badge_numbers)
-        logger.info('Current badge numbers added to CSV')
+        logger.info("Current badge numbers added to CSV")
     else:
         differences = compare_badge_numbers(last_badge_numbers, current_badge_numbers)
 
         if any(differences):
             add_badge_numbers_to_csv(current_badge_numbers)
-            logger.info('Current badge numbers added to CSV')
+            logger.info("Current badge numbers added to CSV")
             message = generate_update_message(differences, current_badge_numbers)
             try:
                 await context.bot.send_message(
@@ -252,7 +252,7 @@ async def status_message(context: CallbackContext):
             except Exception as e:
                 logger.error(f"Failed to send Telegram message: {e}")
         else:
-            logger.info('No badge updates since last check')
+            logger.info("No badge updates since last check")
 
 # Function to start the bot and send a welcome message
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -280,9 +280,9 @@ async def scheduled_status_check(application: Application):
 
     if job_queue:
         job_queue.run_repeating(status_message, interval=3600, first=10)
-        logger.info('Scheduled badge status check every hour')
+        logger.info("Scheduled badge status check every hour")
     else:
-        logger.warning('Job queue not available during startup')
+        logger.warning("Job queue not available during startup")
 
 # Function to manually check the badge status
 async def manual_status_check(update: Update, context: ContextTypes.DEFAULT_TYPE):
