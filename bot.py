@@ -153,8 +153,8 @@ def add_badge_numbers_to_csv(new_entry):
 def generate_update_message(differences, current_badges):
     message = ""
     for i, (name, badge) in enumerate(BADGES.items()):
-        path_diff, exam_diff = differences[2 * i], differences[2 * i + 1]
-        path_num, exam_num = current_badges[2 * i + 1], current_badges[2 * i + 2]
+        exam_diff, path_diff = differences[2 * i], differences[2 * i + 1]
+        exam_num, path_num = current_badges[2 * i + 1], current_badges[2 * i + 2]
 
         if badge['exam_id'] or badge['path_id']:
             message += f"{badge['symbol']} *{name}*\n"
