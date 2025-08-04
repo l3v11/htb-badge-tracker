@@ -69,7 +69,7 @@ HTB Badge Tracker is a Telegram bot that periodically checks the number of badge
 - TELEGRAM_BOT_TOKEN: Get this token by creating a bot in [@BotFather](https://t.me/BotFather).
 - TELEGRAM_USER_ID: The Telegram user you want to authorize to use the bot.
 - TELEGRAM_CHANNEL_ID: The ID of the Telegram channel where the bot will post updates.
-- CBBH_PATH, CBBH_EXAM, CPTS_PATH, CPTS_EXAM, CDSA_PATH, CDSA_EXAM, CWEE_PATH, CWEE_EXAM, CAPE_PATH, CAPE_EXAM, CJCA_PATH, CJCA_EXAM: The IDs for the respective badges. If you do not have an ID, you can simply leave the variable empty. The bot will then set the number to 0.
+- CBBH_EXAM, CBBH_PATH, CPTS_EXAM, CPTS_PATH, CDSA_EXAM, CDSA_PATH, CWEE_EXAM, CWEE_PATH, CAPE_EXAM, CAPE_PATH, CJCA_EXAM, CJCA_PATH: The IDs for the respective badges. If you do not have an ID, you can simply leave the variable empty. The bot will then set the number to 0.
 
 You can find your Badge IDs here: [Hack The Box Academy - My Badges](https://academy.hackthebox.com/my-badges)
 
