@@ -211,16 +211,16 @@ async def last_batch(update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     last_update_times = get_last_update_times()
-    message = "🔶 *Last Batch Update Times:*\n\n"
+    message = "💿 __*Last Batch Update Times:*__\n\n"
     for name, badge in BADGES.items():
         if badge['exam_id']:
             if name in last_update_times:
                 timestamp = last_update_times[name][0]
-                message += f"{name}: {timestamp} UTC\n"
+                message += f"*{name}*: {timestamp} UTC\n"
             else:
-                message += f"{name}: No data\n"
+                message += f"*{name}*: No data\n"
         else:
-            message += f"{name}: No data\n"
+            message += f"*{name}*: No data\n"
     try:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
