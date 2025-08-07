@@ -167,7 +167,7 @@ def generate_update_message(differences, current_badges):
             message += "\n"
 
     if message:
-        message += f"<u>Last updated: {current_badges[0]} UTC</u>"
+        message += f"<i>Last updated: {current_badges[0]} UTC</i>"
     return message
 
 # Function to get the last update times for each exam from the CSV file
