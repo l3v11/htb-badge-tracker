@@ -159,15 +159,15 @@ def generate_update_message(differences, current_badges):
         if exam_num == 0 and path_num == 0:
             continue
         if badge['exam_id'] or badge['path_id']:
-            message += f"{badge['symbol']} *{name}*\n"
+            message += f"{badge['symbol']} <b>{name}</b>\n"
             if badge['exam_id']:
-                message += f"EXAM: {exam_num} {'*(' + ('+' if exam_diff > 0 else '') + str(exam_diff) + ')*' if exam_diff != 0 else ''}\n"
+                message += f"EXAM: {exam_num} {'<b>(' + ('+' if exam_diff > 0 else '') + str(exam_diff) + ')</b>' if exam_diff != 0 else ''}\n"
             if badge['path_id']:
-                message += f"PATH: {path_num} {'*(' + ('+' if path_diff > 0 else '') + str(path_diff) + ')*' if path_diff != 0 else ''}\n"
+                message += f"PATH: {path_num} {'<b>(' + ('+' if path_diff > 0 else '') + str(path_diff) + ')</b>' if path_diff != 0 else ''}\n"
             message += "\n"
 
     if message:
-        message += f"_Last updated: {current_badges[0]} UTC_"
+        message += f"<u>Last updated: {current_badges[0]} UTC</u>"
     return message
 
 # Function to get the last update times for each exam from the CSV file
@@ -211,21 +211,21 @@ async def last_batch(update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     last_update_times = get_last_update_times()
-    message = "💿 __*Last Batch Update Times:*__\n\n"
+    message = "💿 <u><b>Last Batch Update Times</b></u>\n\n"
     for name, badge in BADGES.items():
         if badge['exam_id']:
             if name in last_update_times:
                 timestamp = last_update_times[name][0]
-                message += f"*{name}*: {timestamp} UTC\n"
+                message += f"<b>{name}:</b> {timestamp} UTC\n"
             else:
-                message += f"*{name}*: No data\n"
+                message += f"<b>{name}:</b> No data\n"
         else:
-            message += f"*{name}*: No data\n"
+            message += f"<b>{name}:</b> No data\n"
     try:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=message,
-            parse_mode='Markdown'
+            parse_mode='HTML'
         )
     except Exception as e:
         logger.error(f"Failed to send Telegram message: {e}")
@@ -249,7 +249,7 @@ async def status_message(context: CallbackContext):
                 await context.bot.send_message(
                     chat_id=CHAT_ID,
                     text=message,
-                    parse_mode='Markdown'
+                    parse_mode='HTML'
                 )
             except Exception as e:
                 logger.error(f"Failed to send Telegram message: {e}")
