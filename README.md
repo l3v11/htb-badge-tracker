@@ -88,4 +88,4 @@ This project is licensed under the terms of the MIT License.
 
 ## Credits
 [Sourav](https://github.com/l3v11) *(Maintainer)* |
-[PayloadBunny](https://github.com/lzzPayloadBunnyy12)
+[PayloadBunny](https://github.com/PayloadBunnyy)

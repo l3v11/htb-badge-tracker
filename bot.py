@@ -152,18 +152,23 @@ def add_badge_numbers_to_csv(new_entry):
 # Function to generate a message detailing the changes in badge numbers
 def generate_update_message(differences, current_badges):
     message = ""
+    flag = False
     for i, (name, badge) in enumerate(BADGES.items()):
-        exam_diff, path_diff = differences[2 * i], differences[2 * i + 1]
-        exam_num, path_num = current_badges[2 * i + 1], current_badges[2 * i + 2]
+        exam_diff, path_diff = int(differences[2 * i]), int(differences[2 * i + 1])
+        exam_num, path_num = int(current_badges[2 * i + 1]), int(current_badges[2 * i + 2])
+
+        if exam_diff:
+            flag = True
 
         if exam_num == 0 and path_num == 0:
             continue
-        if badge['exam_id'] or badge['path_id']:
+
+        if flag and (badge['exam_id'] or badge['path_id']):
             message += f"{badge['symbol']} <b>{name}</b>\n"
             if badge['exam_id']:
-                message += f"EXAM: {exam_num} {'<b>(' + ('+' if exam_diff > 0 else '') + str(exam_diff) + ')</b>' if exam_diff != 0 else ''}\n"
+                message += f"EXAM: {exam_num} {'<b>(' + '+' + str(exam_diff) + ')</b>' if exam_diff > 0 else ''}\n"
             if badge['path_id']:
-                message += f"PATH: {path_num} {'<b>(' + ('+' if path_diff > 0 else '') + str(path_diff) + ')</b>' if path_diff != 0 else ''}\n"
+                message += f"PATH: {path_num} {'<b>(' + '+' + str(path_diff) + ')</b>' if path_diff > 0 else ''}\n"
             message += "\n"
 
     if message:
